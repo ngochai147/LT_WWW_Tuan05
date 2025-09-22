@@ -46,11 +46,22 @@
 </head>
 <body>
 <h2>📢 Danh sách điện thoại</h2>
-<form>
-    <div style="display: flex;justify-content: center;gap:10px">
-        <label>Nhập mã nhà cung cấp</label>
-        <input type="text" >
-        <button type="submit">Tìm</button>
+<form action="dien-thoai" method="post" >
+    <div style="display: flex;justify-content: space-between;padding-left: 160px">
+        <select name="nhaCC" onchange="this.form.submit()" style="width: 200px;height: 30px">
+            <c:forEach items="${listNhaCungCap}" var="nhaCC">
+                <option value="${nhaCC.tenNhaCC}"
+                        <c:if test="${tenNhaCC == nhaCC.tenNhaCC}">selected</c:if>>
+                        ${nhaCC.tenNhaCC}
+                </option>
+            </c:forEach>
+        </select>
+
+        <div style="padding-right: 160px">
+            <label>Tìm kiếm nhà cung cấp</label>
+            <input type="text" name="timKiem" value="${keyTimKiem}">
+            <button type="submit">Tìm</button>
+        </div>
     </div>
 </form>
 
@@ -65,14 +76,15 @@
         </tr>
         </thead>
         <tbody>
-            <tr>
-                <td style="width: 100px">a</td>
-                <td style="width: 400px">a</td>
-                <td style="width: 400px">a</td>
-                <td style="width: 150px">a</td>
-                <td style="width: 400px">a</td>
-            </tr>
-
+            <c:forEach items="${listDienThoai}" var="dienThoai">
+                <tr>
+                    <td style="width: 100px">${dienThoai.maDT}</td>
+                    <td style="width: 400px">${dienThoai.hinhAnh}</td>
+                    <td style="width: 400px">${dienThoai.tenDT}</td>
+                    <td style="width: 150px">${dienThoai.namSX}</td>
+                    <td style="width: 400px">${dienThoai.cauHinh}</td>
+                </tr>
+            </c:forEach>
         </tbody>
     </table>
 

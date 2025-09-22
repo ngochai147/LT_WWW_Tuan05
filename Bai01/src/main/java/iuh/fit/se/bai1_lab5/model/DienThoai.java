@@ -1,17 +1,34 @@
 package iuh.fit.se.bai1_lab5.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 
 @Entity
 public class DienThoai {
     @Id
+    @Column(name = "MADT")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int maDT;
+
+    @Column(name = "TENDT")
+    @NotBlank(message = "Tên điện thoại không được để trống")
     private String tenDT;
-    private int namSX;
+
+    @Column(name = "NAMSX")
+    @NotNull(message = "Nẵm sản xuất không được để trống")
+    @Min(value = 1000, message = "Năm sản xuất phải >= 1000")
+    @Max(value = 9999, message = "Năm sản xuất phải <= 9999")
+    private Integer namSX;
+
+    @Column(name = "CAUHINH")
+    @NotBlank(message = "Cấu hình không được để trống")
+    @Size(max = 255,message = "Chuỗi ko dài hơn 255 ký tự")
     private String cauHinh;
+
+    @Column(name = "HINHANH")
+    @NotBlank(message = "Hình ảnh không được để trống")
+    @Pattern(regexp = ".*\\.(png|jpg|jpeg)$",
+            message = "Hình ảnh chỉ chấp nhận định dạng: png, jpg, jpeg")
     private String hinhAnh;
 
     public NhaCungCap getNhaCungCap() {
@@ -23,6 +40,7 @@ public class DienThoai {
     }
 
     @ManyToOne
+    @JoinColumn(name = "MANCC")
     private NhaCungCap nhaCungCap;
 
     public DienThoai(){

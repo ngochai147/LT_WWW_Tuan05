@@ -11,7 +11,7 @@ import java.util.List;
 public class DienThoaiImpl implements DienThoaiDao {
 
     @Override
-    public void save(DienThoaiDao dienThoai) {
+    public void save(DienThoai dienThoai) {
         EntityManager em= EntityManagerUtils.getEntityManager();
         EntityTransaction entityTransaction=em.getTransaction();
         try {
@@ -28,26 +28,34 @@ public class DienThoaiImpl implements DienThoaiDao {
 
     @Override
     public boolean xoaDienThoai(int maDT) {
-        EntityManager em=EntityManagerUtils.getEntityManager();
-        EntityTransaction entityTransaction=em.getTransaction();
+        EntityManager em = EntityManagerUtils.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
         try {
-            entityTransaction.begin();
-            DienThoaiDao dienThoai=findByMaDT(maDT);
-            if(dienThoai!=null){
+            tx.begin();
+            // tìm ngay trên em hiện tại
+            DienThoai dienThoai = em.find(DienThoai.class, maDT);
+            if (dienThoai != null) {
                 em.remove(dienThoai);
-                entityTransaction.commit();
+                tx.commit();
+                return true;
+            } else {
+                tx.rollback();
+                return false;
             }
-        }catch (Exception e){
-            if(entityTransaction.isActive())
-                entityTransaction.rollback();
+        } catch (Exception e) {
+            if (tx.isActive()) tx.rollback();
+            e.printStackTrace();
+            return false;
+        } finally {
+            em.close();
         }
-        return false;
     }
 
+
     @Override
-    public DienThoaiDao findByMaDT(int maDT) {
+    public DienThoai findByMaDT(int maDT) {
         try(EntityManager entityManager=EntityManagerUtils.getEntityManager()) {
-            return entityManager.createQuery("from DienThoai d where d.maDT=:maDT", DienThoaiDao.class)
+            return entityManager.createQuery("from DienThoai d where d.maDT=:maDT", DienThoai.class)
                     .setParameter("maDT",maDT)
                     .getSingleResult();
         }catch (Exception e){

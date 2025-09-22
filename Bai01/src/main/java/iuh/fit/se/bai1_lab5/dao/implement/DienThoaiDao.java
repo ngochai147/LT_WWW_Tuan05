@@ -5,8 +5,8 @@ import iuh.fit.se.bai1_lab5.model.DienThoai;
 import java.util.List;
 
 public interface DienThoaiDao {
-    void save(DienThoaiDao dienThoai);
+    void save(DienThoai dienThoai);
     boolean xoaDienThoai(int maDT);
-    DienThoaiDao findByMaDT(int maDT);
+    DienThoai findByMaDT(int maDT);
     List<DienThoai> getAllDienThoai();
 }

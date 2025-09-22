@@ -52,9 +52,9 @@
         <img src="../images/tải%20xuống.jpeg" alt="home">
         <div class="header">
             <ul type="none">
-                <li><a href="./dienthoai/DanhSachDienThoaiNCC.jsp">Danh sách sản phẩm</a></li>
-                <li><a href="">Thêm mới sản phẩm</a></li>
-                <li><a href="">Chức năng quản lý</a></li>
+                <li><a href="${pageContext.request.contextPath}/dien-thoai">Danh sách sản phẩm</a></li>
+                <li><a href="${pageContext.request.contextPath}/dienthoai-form">Thêm mới sản phẩm</a></li>
+                <li><a href="${pageContext.request.contextPath}/quanly">Chức năng quản lý</a></li>
             </ul>
         </div>
     </div>

@@ -1,18 +1,23 @@
 package iuh.fit.se.bai1_lab5.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 
 import java.util.List;
 
 @Entity
 public class NhaCungCap {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "MANCC")
     private int maNCC;
+
+    @Column(name = "TENNHACC")
     private String tenNhaCC;
+
+    @Column(name = "DIACHI")
     private String diaChi;
+
+    @Column(name = "SODIENTHOAI")
     private String soDienThoai;
 
     @OneToMany(mappedBy = "nhaCungCap")
