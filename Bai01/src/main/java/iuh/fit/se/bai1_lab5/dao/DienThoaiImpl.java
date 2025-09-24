@@ -32,7 +32,6 @@ public class DienThoaiImpl implements DienThoaiDao {
         EntityTransaction tx = em.getTransaction();
         try {
             tx.begin();
-            // tìm ngay trên em hiện tại
             DienThoai dienThoai = em.find(DienThoai.class, maDT);
             if (dienThoai != null) {
                 em.remove(dienThoai);
@@ -72,6 +71,29 @@ public class DienThoaiImpl implements DienThoaiDao {
         }catch (Exception e){
             e.printStackTrace();
             return null;
+        }
+    }
+
+    @Override
+    public boolean updateDT(DienThoai dienThoai) {
+        EntityManager em = EntityManagerUtils.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            if (dienThoai != null) {
+                em.merge(dienThoai);
+                tx.commit();
+                return true;
+            } else {
+                tx.rollback();
+                return false;
+            }
+        } catch (Exception e) {
+            if (tx.isActive()) tx.rollback();
+            e.printStackTrace();
+            return false;
+        } finally {
+            em.close();
         }
     }
 }

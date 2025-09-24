@@ -8,29 +8,42 @@ import iuh.fit.se.bai1_lab5.model.DienThoai;
 import iuh.fit.se.bai1_lab5.model.NhaCungCap;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Part;
 import jakarta.validation.*;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Set;
 
 @WebServlet(name = "dienThoaiController", urlPatterns = {"/dienthoai-form"})
+@MultipartConfig(
+        fileSizeThreshold = 1024 * 1024, // 1MB
+        maxFileSize = 1024 * 1024 * 10,  // 10MB
+        maxRequestSize = 1024 * 1024 * 50 // 50MB
+)
 public class DienThoaiFormServlet extends HttpServlet {
     private NhaCungCapDao nhaCungCapDao;
     private DienThoaiDao dienThoaiDao;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
+        super.init(config);
         nhaCungCapDao = new NhaCungCapImpl();
         dienThoaiDao = new DienThoaiImpl();
+
+
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        
         String tenDT = req.getParameter("tenDT");
         String namSXStr = req.getParameter("namSX");
         int namSX = 0;
@@ -38,9 +51,24 @@ public class DienThoaiFormServlet extends HttpServlet {
             namSX = Integer.parseInt(namSXStr);
         }
         String cauHinh = req.getParameter("cauHinh");
-        int maNCC = Integer.parseInt(req.getParameter("mancc"));
-        String hinhAnh = req.getParameter("hinhAnh");
+        String maNCCStr = req.getParameter("mancc");
+        int maNCC = 0;
+        if (maNCCStr != null && !maNCCStr.isEmpty()) {
+            maNCC = Integer.parseInt(maNCCStr);
+        }
 
+        Part filePart = req.getPart("hinhAnh");
+        String hinhAnh;
+        if (filePart != null && filePart.getSubmittedFileName() != null && !filePart.getSubmittedFileName().isEmpty()) {
+            String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
+            String uploadPath = getServletContext().getRealPath("/images");
+            filePart.write(uploadPath + File.separator + fileName);
+            hinhAnh = fileName;
+        } else {
+            hinhAnh = "images/default.png";
+        }
+
+        // Tạo đối tượng
         DienThoai dienThoai = new DienThoai();
         NhaCungCap nhaCungCap = nhaCungCapDao.getNhaCungCapMaNCC(maNCC);
 
@@ -50,9 +78,9 @@ public class DienThoaiFormServlet extends HttpServlet {
         dienThoai.setHinhAnh(hinhAnh);
         dienThoai.setNhaCungCap(nhaCungCap);
 
+        // Validate
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         Validator validator = factory.getValidator();
-
         Set<ConstraintViolation<DienThoai>> errors = validator.validate(dienThoai);
 
         if (errors.isEmpty()) {
@@ -69,6 +97,7 @@ public class DienThoaiFormServlet extends HttpServlet {
                     .forward(req, resp);
         }
     }
+
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

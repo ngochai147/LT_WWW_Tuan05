@@ -41,7 +41,6 @@ public class EntityManagerUtils {
         em.persist(ncc1);
         em.persist(ncc2);
 
-        // Tạo điện thoại
         DienThoai dt1 = new DienThoai();
         dt1.setTenDT("Samsung Galaxy S25");
         dt1.setNamSX(2025);

@@ -6,47 +6,72 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background: #f4f6f9;
+            background: #eef2f7;
         }
         .container {
-            max-width: 500px;
-            margin: 40px auto;
+            max-width: 550px;
+            margin: 50px auto;
             background: #fff;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);}
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+        }
         h2 {
             text-align: center;
-            margin-bottom: 20px;
-            color: #333; }
+            margin-bottom: 25px;
+            color: #2c3e50;
+        }
         label {
             font-weight: bold;
             display: block;
-            margin: 10px 0 5px;
-            color: #444; }
+            margin: 12px 0 6px;
+            color: #444;
+        }
         input, textarea, select {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             border: 1px solid #ccc;
-            border-radius: 6px;
-            font-size: 14px; }
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border 0.3s, box-shadow 0.3s;
+        }
+        input:focus, textarea:focus, select:focus {
+            border-color: #007BFF;
+            box-shadow: 0 0 5px rgba(0,123,255,0.3);
+            outline: none;
+        }
         textarea {
             resize: vertical;
-            min-height: 70px;
+            min-height: 80px;
+        }
+        .btn-home {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 8px 15px;
+            background: #6c757d;
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: background 0.3s;
+        }
+        .btn-home:hover {
+            background: #5a6268;
         }
         button {
             width: 100%;
-            padding: 12px;
-            background: #4CAF50;
+            padding: 14px;
+            background: #28a745;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             color: white;
-            font-size: 15px;
+            font-size: 16px;
             cursor: pointer;
-            margin-top: 15px;
+            margin-top: 18px;
+            transition: background 0.3s, transform 0.2s;
         }
         button:hover {
-            background: #43a047;
+            background: #218838;
+            transform: translateY(-2px);
         }
         .error {
             color: red;
@@ -56,8 +81,9 @@
 </head>
 <body>
 <div class="container">
-    <h2>Thêm sản phẩm điện thoại</h2>
-    <form action="dienthoai-form" method="post">
+    <a href="${pageContext.request.contextPath}/views/index.jsp" class="btn-home">🏠 Trang chủ</a>
+    <h2>➕ Thêm sản phẩm điện thoại</h2>
+    <form action="dienthoai-form" method="post" enctype="multipart/form-data">
         <label>Tên điện thoại</label>
         <input type="text" name="tenDT" value="${dienthoai.tenDT}" />
         <c:forEach items="${errors}" var="err">
@@ -92,8 +118,8 @@
             </c:forEach>
         </select>
 
-        <label>Ảnh sản phẩm (đường dẫn)</label>
-        <input type="text" name="hinhAnh" value="${dienthoai.hinhAnh}" />
+        <label>Ảnh sản phẩm</label>
+        <input type="file" name="hinhAnh" value="${dienthoai.hinhAnh}" />
         <c:forEach items="${errors}" var="err">
             <c:if test="${err.propertyPath eq 'hinhAnh'}">
                 <span class="error">${err.message}</span>

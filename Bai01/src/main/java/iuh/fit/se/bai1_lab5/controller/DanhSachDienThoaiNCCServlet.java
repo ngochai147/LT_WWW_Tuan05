@@ -38,44 +38,20 @@ public class DanhSachDienThoaiNCCServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
         List<DienThoai> dienThoais = null;
-        NhaCungCap nhaCungCap = null;
-
         String tenNhaCC = req.getParameter("nhaCC");
-        String keyTimKiem = req.getParameter("timKiem");
-
         List<NhaCungCap> nhaCungCapList = nhaCungCapDao.getAllNhaCungCap();
+        if(tenNhaCC.equals("default")){
+            dienThoais = dienThoaiDao.getAllDienThoai();
 
-        if (keyTimKiem != null && !keyTimKiem.trim().isEmpty()) {
-            try {
-                int maNCC = Integer.parseInt(keyTimKiem);
-                if(maNCC<10000){
-                    nhaCungCap = nhaCungCapDao.getNhaCungCapMaNCC(maNCC);
-                }
-            } catch (NumberFormatException e) {
-                if ((nhaCungCap = nhaCungCapDao.getNhaCungCapTenNCC(keyTimKiem)) != null) {
-                    // tìm theo tên
-                } else if ((nhaCungCap = nhaCungCapDao.getNhaCungCapDiaChi(keyTimKiem)) != null) {
-                    // tìm theo địa chỉ
-                } else if ((nhaCungCap = nhaCungCapDao.getNhaCungCapSoDienThoai(keyTimKiem)) != null) {
-                    // tìm theo số điện thoại
-                }
-            }
-        }
-
-        if (nhaCungCap == null && tenNhaCC != null) {
-            nhaCungCap = nhaCungCapDao.getNhaCungCapTenNCC(tenNhaCC);
-        }
-
-        if (nhaCungCap != null) {
+        }else {
+            NhaCungCap nhaCungCap = nhaCungCapDao.getNhaCungCapTenNCC(tenNhaCC);
             dienThoais = nhaCungCapDao.getAllDienThoaiNCC(nhaCungCap.getMaNCC());
-        }
 
+        }
         req.setAttribute("listDienThoai", dienThoais);
         req.setAttribute("listNhaCungCap", nhaCungCapList);
         req.setAttribute("tenNhaCC", tenNhaCC);
-        req.setAttribute("keyTimKiem", keyTimKiem);
 
         req.getRequestDispatcher("/views/dienthoai/DanhSachDienThoaiNCC.jsp").forward(req, resp);
     }

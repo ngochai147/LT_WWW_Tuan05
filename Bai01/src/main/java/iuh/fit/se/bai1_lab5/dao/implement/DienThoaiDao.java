@@ -9,4 +9,5 @@ public interface DienThoaiDao {
     boolean xoaDienThoai(int maDT);
     DienThoai findByMaDT(int maDT);
     List<DienThoai> getAllDienThoai();
+    boolean updateDT(DienThoai dienThoai);
 }
